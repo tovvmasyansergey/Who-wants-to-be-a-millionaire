@@ -1,0 +1,41 @@
+"""
+create by:Sergey Tovmasyan
+date:07.06.2024
+"""
+import random
+import tkinter
+from tkinter import messagebox
+def read_questions(filename):
+    """
+    Function: read_questions
+    Brief: Reads questions from a file and extracts them into a
+           list of dictionaries with questions and answers.
+    Params: filename - the name of the file containing the questions
+    Return: A list of dictionaries with keys 'que' for question and 'ans' for answers
+    """
+    with open(filename,encoding = "utf-8") as ffile:
+        lines = ffile.readlines()
+    questions = []
+    for line in lines:
+        line = line.strip()
+        if "?" in line:
+            question = line[:line.index("?")+1]
+            answers = line[line.index("?")+1:]
+            questions.append({"que": question, "ans": answers})
+    return questions
+def get_name_and_start_quiz():
+    name = name_entry.get()
+    if name:
+        name_window.destroy()
+        questions = read_questions("questions.txt")
+        ask_questions(name, questions)
+    else:
+        messagebox.showwarning("Input Error", "Please enter your name.")
+name_window = tkinter.Tk()
+name_window.title("Enter Name")
+name_window.geometry("300x250+600+400")
+tkinter.Label(name_window, text="Enter your name:").pack()
+name_entry = tkinter.Entry(name_window)
+name_entry.pack()
+tkinter.Button(name_window, text="Start Quiz", command=get_name_and_start_quiz).pack()
+name_window.mainloop()
